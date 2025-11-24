@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
 import { decode, verify } from 'hono/jwt';
-import { postInput, postUpdateInput } from '@chintan_07/medium-common';
+import { createPostInput , updatePostInput} from '@chintan_07/medium-common';
 
 export const postRouter = new Hono<{
     Bindings: { 
@@ -37,7 +37,7 @@ postRouter.post('/', async (c) => {
   }).$extends(withAccelerate())
 
   const body = await c.req.json();  
-  const {success} = postInput.safeParse(body);
+  const {success} = createPostInput.safeParse(body);
   if(!success){
     c.status(411)
     return c.json({
@@ -67,7 +67,7 @@ postRouter.put('/', async (c) => {
   }).$extends(withAccelerate())
   
   const body = await c.req.json();
-  const {success} = postUpdateInput.safeParse(body);
+  const {success} = updatePostInput.safeParse(body);
   if(!success){
     c.status(411)
     return c.json({

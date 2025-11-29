@@ -2,6 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Signup } from './pages/Signup';
 import { Signin } from './pages/Signin';
 import { Posts } from './pages/Posts';
+import { Post } from './pages/Post';
+import { Publish } from './pages/Publish';
+
 
 
 function App() {
@@ -12,7 +15,10 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
-          <Route path="/blog/:id" element={<Posts />} />
+          <Route path="/Post/:id" element={<Post />} />
+          <Route path="/Posts" element={<Posts />} />
+          <Route path="/Publish" element={<Publish />} />
+
         </Routes>
       </BrowserRouter>
     </>

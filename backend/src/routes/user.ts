@@ -19,7 +19,6 @@ userRouter.post('/signup', async (c) => {
     c.status(411)
     return c.json({
         message: "Invalid Input",
-        error: result.error
     })
   }
   const prisma = new PrismaClient({
@@ -53,12 +52,10 @@ userRouter.post('/signin', async (c) => {
 
   const body = await c.req.json();
   const result = signinInput.safeParse(body);
-  console.log(result);
   if(!result.success){
     c.status(411)
     return c.json({
-        message: "Invalid Input",
-        error: result.error
+        message: "Invalid Input"
     })
   }
   try {
@@ -85,14 +82,19 @@ userRouter.post('/signin', async (c) => {
   }
 })
 
-userRouter.get('/all', async (c) => {
+userRouter.get('/me', async (c) => {
     const authHeader = c.req.header('Authorization');
     const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate())
-    // const user = await verify(authHeader || "", c.env.JWT_SECRET);
-
-    const users = await prisma.user.findMany();
-
-    return c.json(users);   
+    const userId = await verify(authHeader || "", c.env.JWT_SECRET);
+    const name = await prisma.user.findUnique({
+      where: {
+        id: userId.id as string
+      },
+      select: {
+        name: true
+      }
+    })
+    return c.json(name);
 })

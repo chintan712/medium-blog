@@ -99,7 +99,18 @@ postRouter.get('/bulk', async (c) => { //add pagination later
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate())
 
-  const posts =  await prisma.post.findMany()
+  const posts =  await prisma.post.findMany({
+    select:{
+      id: true,
+      title: true,
+      content: true,
+      author: {
+        select : {
+          name: true
+        }
+      }
+    }
+  })
 
   return c.json({
     posts
@@ -117,6 +128,16 @@ postRouter.get('/:id', async (c) => {
       where: { 
         id: postId 
       }, 
+      select:{
+        id: true,
+        title: true,
+        content: true,
+        author: {
+          select : {
+            name: true
+          }
+        }
+    }
     })
     return c.json({
       post
